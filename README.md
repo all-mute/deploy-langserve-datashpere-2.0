@@ -16,13 +16,26 @@
 3. Если у вас не установлен интерфейс командной строки Yandex Cloud, то выполните шаги в этой [инструкции](https://cloud.yandex.ru/ru/docs/cli/quickstart#install).
 4. Задайте каталог, в котором вы будете развертывать сервис, каталогом по умолчанию: `yc config set folder-name <название_каталога>`.
 5. Получите IAM-токен для своего пользовательского аккаунта: `yc iam create-token`.
-6. Выполните команду, подставив вместо <IAM-токен> значение токена с предыдущего шага:
+
+#### Получение IAM-токена для своего аккаунта
+
+1. В авторизованном CLI выполните команду: `yc iam create-token`
+
+2. Отправьте ваш oauth-токен командой
+```bash
+curl -X POST \
+-d '{"yandexPassportOauthToken":"OAUTH_TOKEN"}' \                           
+https://iam.api.cloud.yandex.net/iam/v1/tokens
+```
+
+6. ~~Выполните команду, подставив вместо <IAM-токен> значение токена с предыдущего шага:~~
 ```
 docker login \
 --username iam \
 --password <IAM-токен> \
 cr.yandex
 ```
+
 7. Загрузите Docker-образ в Container Registry:
 
 `docker tag langserve-demo cr.yandex/<идентификатор_реестра>/langserve-demo:latest`
@@ -52,4 +65,7 @@ curl -H "x-node-id: <id_ноды>" -H "Authorization: Bearer <IAM_TOKEN>" -H "x-
     "input": "Привет. Как дела?"
 }' https://node-api.datasphere.yandexcloud.net/invoke
 ```
+
+Или запустите скрипт `test_request.py`.
+
 13. Для балансировки нагрузки между нодами и обновления развернутых сервисов во время работы создайте [алиас](https://cloud.yandex.ru/ru/docs/datasphere/operations/deploy/alias-create).
